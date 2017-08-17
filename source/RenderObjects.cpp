@@ -27,7 +27,10 @@ Geometry makeGeometry(const Vertex *verts, size_t vsize,
 
 	// Describe memory layout
 	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(0,4,GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)16);
+
 
 	// Unbind data
 	glBindVertexArray(0);
