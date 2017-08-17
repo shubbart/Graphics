@@ -74,7 +74,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)deps\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)deps\include\;$(SolutionDir)include\</AdditionalIncludeDirectories>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Lib>
@@ -131,9 +131,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\Context.cpp" />
+    <ClCompile Include="source\Draw.cpp" />
+    <ClCompile Include="source\RenderObjects.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\graphics\Context.h" />
+    <ClInclude Include="include\graphics\Draw.h" />
+    <ClInclude Include="include\graphics\RenderObjects.h" />
+    <ClInclude Include="include\graphics\Vertex.h" />
     <ClInclude Include="source\glinc.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
