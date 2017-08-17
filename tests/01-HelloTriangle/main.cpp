@@ -8,7 +8,8 @@ int main()
 
 	while (context.step())
 	{
-		std::cout << context.getKey(65) << std::endl;
+		//std::cout << context.getMouseButton(0) << std::endl;
+
 	}
 
 	context.term();

@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphics", "Graphics.vcxproj", "{07893C13-B0F9-406A-8464-5B3A926B1F27}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01-HelloTriangle", "tests\01-HelloTriangle\01-HelloTriangle.vcxproj", "{B7A7F007-39D5-49FC-AD6D-31158E3666E4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{07893C13-B0F9-406A-8464-5B3A926B1F27} = {07893C13-B0F9-406A-8464-5B3A926B1F27}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

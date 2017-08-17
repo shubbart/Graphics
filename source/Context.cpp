@@ -42,10 +42,10 @@ bool Context::getMouseButton(int button)
 
 void Context::getMousePosition(double &x_out, double &y_out)
 {
-	
+	return glfwGetCursorPos(handle, &x_out, &y_out);
 }
 
 double Context::getTime()
 {
-	return 1;
+	return glfwGetTime();
 }
