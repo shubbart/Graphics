@@ -26,9 +26,9 @@ Geometry makeGeometry(const Vertex *verts, size_t vsize,
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, isize * sizeof(unsigned), idxs, GL_STATIC_DRAW);
 
 	// Describe memory layout
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(0); // Position attribute
 	glVertexAttribPointer(0,4,GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	glEnableVertexAttribArray(1); // Color attribute
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)16);
 
 
