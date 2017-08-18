@@ -2,12 +2,13 @@
 #include "graphics\Vertex.h"
 #include "graphics\RenderObjects.h"
 #include "graphics\Draw.h"
+#include "graphics\GenShape.h"
 #include <iostream>
 
 int main()
 {
 	Context context;
-	context.init();
+	context.init(800,800);
 
 	Vertex verts[7] = { {{0,0,0,1},{ 1, 0, 0, 1 } },
 						{{.5f,0,0,1},{ 0,1,0,1 } },
@@ -24,7 +25,8 @@ int main()
 						0,5,6,
 						0,6,1};
 
-	Geometry g = makeGeometry(verts, 7, idxs, 18);
+	//Geometry g = makeGeometry(verts, 7, idxs, 18);
+	//Geometry gt = makeNGon(3750000, .5f);
 
 	const char* vsource =
 		"#version 450\n"
@@ -49,14 +51,15 @@ int main()
 		"outColor = vColor;\n"
 		"}\n";
 
-	Framebuffer f = { 0,800,600 };
+	Framebuffer f = { 0,800,800 };
 
 	Shader s = makeShader(vsource, fsource);
 
 	while (context.step())
 	{
 		//std::cout << context.getMouseButton(0) << std::endl;
-		s0_draw(f, s, g);
+		//s0_draw(f, s, g);
+		//s0_draw(f, s, gt);
 		
 	}
 
