@@ -25,8 +25,9 @@ int main()
 						0,5,6,
 						0,6,1};
 
-	//Geometry g = makeGeometry(verts, 7, idxs, 18);
-	//Geometry gt = makeNGon(3750000, .5f);
+	Geometry g = makeGeometry(verts, 7, idxs, 18);
+	Geometry gt = makeNGon(3750000, .5f);
+	Geometry cb = makeCheckerboard(4, 1.0f);
 
 	const char* vsource =
 		"#version 450\n"
@@ -45,7 +46,7 @@ int main()
 		"#version 450\n"
 		"out vec4 outColor;\n"
 		"in vec4 vPos;\n"
-		"in vec4 vColor;\n"
+		"flat in vec4 vColor;\n"
 		"void main ()\n" 
 		"{\n" 
 		"outColor = vColor;\n"
@@ -60,10 +61,13 @@ int main()
 		//std::cout << context.getMouseButton(0) << std::endl;
 		//s0_draw(f, s, g);
 		//s0_draw(f, s, gt);
+		s0_draw(f, s, cb);
 		
 	}
 
 	freeGeometry(g);
+	freeGeometry(gt);
+	freeGeometry(cb);
 	freeShader(s);
 	context.term();
 	return 0;
