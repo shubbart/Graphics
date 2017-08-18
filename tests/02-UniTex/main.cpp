@@ -22,34 +22,80 @@ int main()
 	Geometry g = makeGeometry(verts, 4, idxs, 6);
 	Geometry gt = makeNGon(3750000, .15f);
 
+
 	const char* vsource =
 		"#version 450\n"
 		"layout(location = 0) in vec4 position;\n"
 		"layout(location = 1) in vec4 color;\n"
 		"layout(location = 0) uniform float time;\n"
+		"layout(location = 2) uniform float xpos;\n"
+		"layout(location = 3) uniform float ypos; \n"
 		"out vec4 vPos;\n"
 		"out vec4 vColor;\n"
 		"void main()\n"
 		"{\n"
 		"gl_Position = position;\n"
-		"gl_Position.x += sin(time);\n"
-		"gl_Position.y += tan(time)*tan(time)  / 2;\n"
+		"gl_Position.x += xpos;\n"
+		"gl_Position.y += ypos;\n"
+		//"gl_Position.x += sin(time);\n"
+		//"gl_Position.y += tan(time)*tan(time)  / 2;\n"
 		"vColor = color;\n"
-		"vColor.x += sin(time);\n"
-		"vColor.y += sin(time)/2;\n"
-		"vColor.z += sin(time)/3;\n"
 		"vPos = position;\n"
 		"}\n";
 
 	const char* fsource =
 		"#version 450\n"
 		"out vec4 outColor;\n"
+		"layout(location = 0) uniform float time;\n"
+		"layout(location = 1) uniform int tog;\n"
 		"in vec4 vPos;\n"
 		"in vec4 vColor;\n"
 		"void main ()\n"
 		"{\n"
-		"outColor = vColor;\n"
+		"if(tog ==1)\n"
+		"outColor = 1.0 - vColor;\n"
+		"else outColor = vColor;\n"
+		"outColor.r = 0.5+sin(time+gl_FragCoord.x/10)/2.0;\n"
 		"}\n";
+
+
+
+
+
+
+
+
+
+
+
+	//const char* vsource =
+	//	"#version 450\n"
+	//	"layout(location = 0) in vec4 position;\n"
+	//	"layout(location = 1) in vec4 color;\n"
+	//	"layout(location = 0) uniform float time;\n"
+	//	"out vec4 vPos;\n"
+	//	"out vec4 vColor;\n"
+	//	"void main()\n"
+	//	"{\n"
+	//	"gl_Position = position;\n"
+	//	"gl_Position.x += sin(time);\n"
+	//	"gl_Position.y += tan(time)*tan(time)  / 2;\n"
+	//	"vColor = color;\n"
+	//	"vColor.x += sin(time);\n"
+	//	"vColor.y += sin(time)/2;\n"
+	//	"vColor.z += sin(time)/3;\n"
+	//	"vPos = position;\n"
+	//	"}\n";
+
+	//const char* fsource =
+	//	"#version 450\n"
+	//	"out vec4 outColor;\n"
+	//	"in vec4 vPos;\n"
+	//	"in vec4 vColor;\n"
+	//	"void main ()\n"
+	//	"{\n"
+	//	"outColor = vColor;\n"
+	//	"}\n";
 
 	const char* vsource2 =
 		"#version 450\n"
@@ -144,20 +190,45 @@ int main()
 	Shader s2 = makeShader(vsource2, fsource2);
 	Shader s3 = makeShader(vsource3, fsource3);
 	Shader s4 = makeShader(vsource4, fsource4);
+	
+	glm::vec2 pos = { 0,0 };
+	float xpos = 0, ypos = 0;
+	float prevTime = 0;
+	float speed = 5.0f;
 
 	while (context.step())
 	{
+		float ct = context.getTime();
+		float dt = ct - prevTime;
+		prevTime = ct;
+		glm::vec2 vel = { 0,0 };
+
+		vel.y += context.getKey('W');
+		vel.x -= context.getKey('A');
+		vel.y -= context.getKey('S');
+		vel.x += context.getKey('D');
+
+		if (glm::length(vel) > 0)
+		{
+			pos += glm::normalize(vel) * dt * speed;
+		}
+	
+
+
 		clearFramebuffer(f);
-		//setUniform(s, 0, (float)context.getTime());
-		//setUniform(s, 1, context.getKey(' '));
 		setUniform(s, 0, (float)context.getTime());
-		setUniform(s2, 0, (float)context.getTime());
-		setUniform(s3, 0, (float)context.getTime());
-		setUniform(s4, 0, (float)context.getTime());
+		setUniform(s, 1, context.getKey(' '));
+		setUniform(s, 2, pos.x);
+		setUniform(s, 3, pos.y);
+
+		//setUniform(s, 0, (float)context.getTime());
+		//setUniform(s2, 0, (float)context.getTime());
+		//setUniform(s3, 0, (float)context.getTime());
+		//setUniform(s4, 0, (float)context.getTime());
 		s0_draw(f, s, gt);
-		s0_draw(f, s2, gt);
-		s0_draw(f, s3, gt);
-		s0_draw(f, s4, gt);
+		//s0_draw(f, s2, gt);
+		//s0_draw(f, s3, gt);
+		//s0_draw(f, s4, gt);
 	}
 
 	freeGeometry(g);
