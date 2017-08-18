@@ -55,7 +55,7 @@ Geometry makeCheckerboard(int dim, float size)
 		verts[i].position = { x, y, 0, 1 };
 		verts[i].color = { rand()/(float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, 1 };
 
-		if (i == 1 && dim > 1 || i % vdim != vdim - 1 && i / vdim != vdim - 1 && l < isize)
+		if ( i % vdim != vdim - 1 && i / vdim != vdim - 1)
 		{
 			idxs[l++] = i;
 			idxs[l++] = i + 1;
