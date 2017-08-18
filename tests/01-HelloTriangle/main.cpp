@@ -59,9 +59,9 @@ int main()
 	while (context.step())
 	{
 		//std::cout << context.getMouseButton(0) << std::endl;
-		//s0_draw(f, s, g);
+		s0_draw(f, s, g);
 		//s0_draw(f, s, gt);
-		s0_draw(f, s, cb);
+		//s0_draw(f, s, cb);
 		
 	}
 

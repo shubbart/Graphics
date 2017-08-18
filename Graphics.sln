@@ -10,6 +10,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01-HelloTriangle", "tests\0
 		{07893C13-B0F9-406A-8464-5B3A926B1F27} = {07893C13-B0F9-406A-8464-5B3A926B1F27}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02-UniTex", "tests\02-UniTex\02-UniTex.vcxproj", "{9EBAA6C6-31BE-48FA-83BE-0E608EB37FDB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{07893C13-B0F9-406A-8464-5B3A926B1F27} = {07893C13-B0F9-406A-8464-5B3A926B1F27}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -34,6 +39,14 @@ Global
 		{B7A7F007-39D5-49FC-AD6D-31158E3666E4}.Release|x64.Build.0 = Release|x64
 		{B7A7F007-39D5-49FC-AD6D-31158E3666E4}.Release|x86.ActiveCfg = Release|Win32
 		{B7A7F007-39D5-49FC-AD6D-31158E3666E4}.Release|x86.Build.0 = Release|Win32
+		{9EBAA6C6-31BE-48FA-83BE-0E608EB37FDB}.Debug|x64.ActiveCfg = Debug|x64
+		{9EBAA6C6-31BE-48FA-83BE-0E608EB37FDB}.Debug|x64.Build.0 = Debug|x64
+		{9EBAA6C6-31BE-48FA-83BE-0E608EB37FDB}.Debug|x86.ActiveCfg = Debug|Win32
+		{9EBAA6C6-31BE-48FA-83BE-0E608EB37FDB}.Debug|x86.Build.0 = Debug|Win32
+		{9EBAA6C6-31BE-48FA-83BE-0E608EB37FDB}.Release|x64.ActiveCfg = Release|x64
+		{9EBAA6C6-31BE-48FA-83BE-0E608EB37FDB}.Release|x64.Build.0 = Release|x64
+		{9EBAA6C6-31BE-48FA-83BE-0E608EB37FDB}.Release|x86.ActiveCfg = Release|Win32
+		{9EBAA6C6-31BE-48FA-83BE-0E608EB37FDB}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

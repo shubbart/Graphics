@@ -20,3 +20,20 @@ void s0_draw(const Framebuffer &f, const Shader &s, const Geometry &g)
 	glUseProgram(0);
 	glBindVertexArray(0);
 }
+
+void setUniform(const Shader &shader, int location, float value)
+{
+	glProgramUniform1f(shader.handle, location, value);
+}
+
+void clearFramebuffer(const Framebuffer &f)
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, f.handle);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void setUniform(const Shader &s, int location, int value)
+{
+	glProgramUniform1i(s.handle, location, value);
+}
