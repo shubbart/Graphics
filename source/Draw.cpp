@@ -37,3 +37,10 @@ void setUniform(const Shader &s, int location, int value)
 {
 	glProgramUniform1i(s.handle, location, value);
 }
+void setUniform(const Shader &s, int location, const Texture &value, unsigned slot)
+{
+	glActiveTexture(GL_TEXTURE0 + slot);
+	glBindTexture(GL_TEXTURE_2D, value.handle);
+
+	glProgramUniform1i(s.handle, location, slot);
+}
