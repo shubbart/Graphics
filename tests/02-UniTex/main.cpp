@@ -39,7 +39,7 @@ int main()
 		//"gl_Position.x += sin(time);\n"
 		//"gl_Position.y += tan(time)*tan(time)  / 2;\n"
 		"vColor = color;\n"
-		"vUV = position.xy;\n"
+		"vUV = uv;\n"
 		"vPos = position;\n"
 		"}\n";
 
