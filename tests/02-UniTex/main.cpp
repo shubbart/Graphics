@@ -9,24 +9,22 @@ int main()
 	Context context;
 	context.init(800, 800);
 
-	Vertex verts[7] = { { { -.05,-.05,0,1 },{ 1, 0, 0, 1 } },
-		{ {.05,-.05,0,1},{ 0,1,0,1 } },
-		{ {-.05,.05,0,1},{ 0,0,1,1 } },
-		{ {.05,.05,0,1},{ .75,.05,0,1 } },
-		{ { .05,-.05,0,1 },{ .5,.75,0,1 } },
-		{ { -.05,.05,0,1 },{ 0,.75,.5,1 } },
-		{ { .05,.05,0,1 },{ .0,.05,.75,1 } } };
+	Vertex verts[4] = { { { -.05,-.05,0,1 },{ 1, 0, 0, 1 }, {0,0} },
+		{ {.05,-.05,0,1},{ 0,1,0,1 }, {1,0} },
+		{ {-.05,.05,0,1},{ 0,0,1,1 }, {1,1} },
+		{ {.05,.05,0,1},{ .75,.05,0,1 }, {0,1}} };
 
 	unsigned idxs[6] = { 0,1,2,3,2,1 };
 
 	Geometry g = makeGeometry(verts, 4, idxs, 6);
-	Geometry gt = makeNGon(3750000, .5f);
+	Geometry gt = makeNGon(3750000, 1.5f);
 
 
 	const char* vsource =
 		"#version 450\n"
 		"layout(location = 0) in vec4 position;\n"
 		"layout(location = 1) in vec4 color;\n"
+		"layout(location = 2) in vec2 uv;\n"
 		"layout(location = 0) uniform float time;\n"
 		"layout(location = 2) uniform float xpos;\n"
 		"layout(location = 3) uniform float ypos; \n"
@@ -57,13 +55,13 @@ int main()
 		"void main ()\n"
 		"{\n"
 		"vec2 uv = vUV;\n"
-		"uv.x += sin(time*1.5 + uv.y)/3;\n"
-		//"uv += sin(time);\n"
-		//"uv+= sin(.5*time+gl_FragCoord.x*0.01)/2 + sin(.05*time+gl_FragCoord.y*0.01)/2;\n"
+		//"uv.x += sin(time*1.5 + uv.y)/3;\n"
+		"uv += sin(time);\n"
+		"uv+= sin(.5*time+gl_FragCoord.x*0.01)/2 + sin(.05*time+gl_FragCoord.y*0.01)/2;\n"
 		"outColor = texture(map, uv);\n"
-		//"outColor.x += sin(time) * 2;\n"
-		//"outColor.y -= cos(time);\n"
-		//"outColor.z += sin(time) / 2;\n"
+		"outColor.x += sin(time) * 2;\n"
+		"outColor.y -= cos(time);\n"
+		"outColor.z += sin(time) / 2;\n"
 	/*	"if(tog ==1)\n"
 		"outColor = 1.0 - vColor;\n"
 		"else outColor = vColor;\n"
@@ -201,7 +199,7 @@ int main()
 	// RGB texture (3 channels), 2x1
 	unsigned char pixels[] = {255,0,255,255,255,0};
 
-	Texture t_magyel = makeTexture(2, 1, 3, pixels);
+	Texture t_magyel = makeTexture(150, 1, 3, pixels);
 
 	while (context.step())
 	{
