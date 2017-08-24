@@ -200,6 +200,7 @@ int main()
 	unsigned char pixels[] = {255,0,255,255,255,0};
 
 	Texture t_magyel = makeTexture(150, 1, 3, pixels);
+	Texture t_mask = makeTexture(150, 1, 3, pixels);
 
 	while (context.step())
 	{
@@ -227,6 +228,8 @@ int main()
 		setUniform(s, 3, pos.y);
 
 		setUniform(s, 4, t_magyel, 0);
+		setUniform(s, 5, t_mask, 1);
+
 
 		//setUniform(s, 0, (float)context.getTime());
 		//setUniform(s2, 0, (float)context.getTime());
