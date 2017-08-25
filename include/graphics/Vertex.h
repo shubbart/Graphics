@@ -7,4 +7,5 @@ struct Vertex
 	glm::vec4 position;
 	glm::vec4 color;
 	glm::vec2 texCoord; // UV
+	glm::vec4 normal;
 };

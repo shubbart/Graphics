@@ -30,8 +30,11 @@ Geometry makeGeometry(const Vertex *verts, size_t vsize,
 	glVertexAttribPointer(0,4,GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 	glEnableVertexAttribArray(1); // Color attribute
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)16);
-	glEnableVertexAttribArray(2); // UV attribute
+	glEnableVertexAttribArray(2); // texCoord
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)32);
+
+	glEnableVertexAttribArray(3); // Normals
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)40);
 
 
 	// Unbind data

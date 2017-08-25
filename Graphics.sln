@@ -20,6 +20,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03-TDraw", "tests\03-TDraw\
 		{07893C13-B0F9-406A-8464-5B3A926B1F27} = {07893C13-B0F9-406A-8464-5B3A926B1F27}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04-FromDisk", "tests\o4-FromDisk\o4-FromDisk.vcxproj", "{A8C02F89-3209-45B1-A554-E336C536DD25}"
+	ProjectSection(ProjectDependencies) = postProject
+		{07893C13-B0F9-406A-8464-5B3A926B1F27} = {07893C13-B0F9-406A-8464-5B3A926B1F27}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shaders", "resources\Shaders\Shaders.vcxproj", "{C61927BB-1D4C-49D0-9FBA-7CC2ED9A459A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{07893C13-B0F9-406A-8464-5B3A926B1F27} = {07893C13-B0F9-406A-8464-5B3A926B1F27}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -60,6 +70,22 @@ Global
 		{421FB319-5580-4BE9-920C-E88C97D1AC28}.Release|x64.Build.0 = Release|x64
 		{421FB319-5580-4BE9-920C-E88C97D1AC28}.Release|x86.ActiveCfg = Release|Win32
 		{421FB319-5580-4BE9-920C-E88C97D1AC28}.Release|x86.Build.0 = Release|Win32
+		{A8C02F89-3209-45B1-A554-E336C536DD25}.Debug|x64.ActiveCfg = Debug|x64
+		{A8C02F89-3209-45B1-A554-E336C536DD25}.Debug|x64.Build.0 = Debug|x64
+		{A8C02F89-3209-45B1-A554-E336C536DD25}.Debug|x86.ActiveCfg = Debug|Win32
+		{A8C02F89-3209-45B1-A554-E336C536DD25}.Debug|x86.Build.0 = Debug|Win32
+		{A8C02F89-3209-45B1-A554-E336C536DD25}.Release|x64.ActiveCfg = Release|x64
+		{A8C02F89-3209-45B1-A554-E336C536DD25}.Release|x64.Build.0 = Release|x64
+		{A8C02F89-3209-45B1-A554-E336C536DD25}.Release|x86.ActiveCfg = Release|Win32
+		{A8C02F89-3209-45B1-A554-E336C536DD25}.Release|x86.Build.0 = Release|Win32
+		{C61927BB-1D4C-49D0-9FBA-7CC2ED9A459A}.Debug|x64.ActiveCfg = Debug|x64
+		{C61927BB-1D4C-49D0-9FBA-7CC2ED9A459A}.Debug|x64.Build.0 = Debug|x64
+		{C61927BB-1D4C-49D0-9FBA-7CC2ED9A459A}.Debug|x86.ActiveCfg = Debug|Win32
+		{C61927BB-1D4C-49D0-9FBA-7CC2ED9A459A}.Debug|x86.Build.0 = Debug|Win32
+		{C61927BB-1D4C-49D0-9FBA-7CC2ED9A459A}.Release|x64.ActiveCfg = Release|x64
+		{C61927BB-1D4C-49D0-9FBA-7CC2ED9A459A}.Release|x64.Build.0 = Release|x64
+		{C61927BB-1D4C-49D0-9FBA-7CC2ED9A459A}.Release|x86.ActiveCfg = Release|Win32
+		{C61927BB-1D4C-49D0-9FBA-7CC2ED9A459A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
