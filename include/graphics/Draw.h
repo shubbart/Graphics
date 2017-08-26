@@ -1,6 +1,7 @@
 #pragma once
 #include "glm\glm.hpp"
 #include "glm\gtc\type_ptr.hpp"
+#include "graphics\GameObjects.h"
 
 struct Geometry;
 struct Shader;
@@ -25,6 +26,8 @@ namespace _internal
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const glm::vec4 &val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const glm::mat4 &val);
 
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Camera &val);
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Mesh &val);
 }
 
 template<typename T, typename ...U>

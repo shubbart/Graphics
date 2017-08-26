@@ -79,6 +79,9 @@ namespace _internal
 	{
 		glProgramUniformMatrix4fv(s.handle, loc_io++, 1, 0, glm::value_ptr(val));
 	}
+
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Camera &val);
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Mesh &val);
 }
 
 void setFlags(int flags)
