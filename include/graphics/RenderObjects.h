@@ -32,3 +32,5 @@ struct Texture
 
 Texture makeTexture(unsigned w, unsigned h, unsigned c, const unsigned char *pixels);
 void freeTexture(Texture &t);
+
+void solveTangents(Vertex *v, size_t vsize, const unsigned *idx, size_t isize);

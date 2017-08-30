@@ -45,5 +45,11 @@
     <None Include="point.frag">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="standard.vert">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="standard.frag">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

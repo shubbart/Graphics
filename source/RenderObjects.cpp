@@ -1,3 +1,5 @@
+#define GLM_FORCE_SWIZZLE
+
 #include "glinc.h"
 #include "graphics\RenderObjects.h"
 #include "graphics\Vertex.h"
@@ -35,6 +37,12 @@ Geometry makeGeometry(const Vertex *verts, size_t vsize,
 
 	glEnableVertexAttribArray(3); // Normals
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)40);
+
+	glEnableVertexAttribArray(4); // Tangent
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)56);
+
+	glEnableVertexAttribArray(5); // Bitangent
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)72);
 
 
 	// Unbind data
@@ -161,4 +169,38 @@ void freeTexture(Texture &t)
 {
 	glDeleteTextures(1, &t.handle);
 	t = { 0 };
+}
+
+
+glm::vec4 calcTangent(const Vertex &v0, const Vertex &v1, const Vertex &v2)
+{
+	// Calculate the left and right edge of the triangle
+	glm::vec4 p1 = v1.position - v0.position;
+	glm::vec4 p2 = v2.position - v0.position;
+
+	// Calculate the left and right edge of the triangle's UVs
+	glm::vec2 t1 = v1.texCoord - v0.texCoord;
+	glm::vec2 t2 = v2.texCoord - v0.texCoord;
+
+	// Rotate the position edge to line up with the texture edge and normalize
+	return glm::normalize((p1*t2.y - p2*t1.y) / (t1.x*t2.y - t1.y*t2.x));
+}
+
+// Requires #define GLM_FORCE_SWIZZLE
+void solveTangents(Vertex *v, size_t vsize, const unsigned *idxs, size_t isize)
+{
+	for (int i = 0; i < isize; i += 3)
+	{
+		glm::vec4 T = calcTangent(v[idxs[i]], v[idxs[i +1]], v[idxs[i]+2]);
+
+		for (int j = 0; j < 3; ++j)
+		{
+			v[idxs[i + j]].tangent = glm::normalize(T + v[idxs[i + j]].tangent);
+
+		}
+	}
+
+	for (int i = 0; i < vsize; ++i)
+		v[i].bitangent = glm::vec4(glm::cross(v[i].normal.xyz(), v[i].tangent.xyz()),0);
+
 }
