@@ -8,6 +8,20 @@
 #include <iostream>
 #endif
 
+glm::vec4 calcTangent(const Vertex &v0, const Vertex &v1, const Vertex &v2)
+{
+	// Calculate the left and right edge of the triangle
+	glm::vec4 p1 = v1.position - v0.position;
+	glm::vec4 p2 = v2.position - v0.position;
+
+	// Calculate the left and right edge of the triangle's UVs
+	glm::vec2 t1 = v1.texCoord - v0.texCoord;
+	glm::vec2 t2 = v2.texCoord - v0.texCoord;
+
+	// Rotate the position edge to line up with the texture edge and normalize
+	return glm::normalize((p1*t2.y - p2*t1.y) / (t1.x*t2.y - t1.y*t2.x));
+}
+
 Geometry makeGeometry(const Vertex *verts, size_t vsize,
 	const unsigned *idxs, size_t isize)
 {
@@ -169,21 +183,6 @@ void freeTexture(Texture &t)
 {
 	glDeleteTextures(1, &t.handle);
 	t = { 0 };
-}
-
-
-glm::vec4 calcTangent(const Vertex &v0, const Vertex &v1, const Vertex &v2)
-{
-	// Calculate the left and right edge of the triangle
-	glm::vec4 p1 = v1.position - v0.position;
-	glm::vec4 p2 = v2.position - v0.position;
-
-	// Calculate the left and right edge of the triangle's UVs
-	glm::vec2 t1 = v1.texCoord - v0.texCoord;
-	glm::vec2 t2 = v2.texCoord - v0.texCoord;
-
-	// Rotate the position edge to line up with the texture edge and normalize
-	return glm::normalize((p1*t2.y - p2*t1.y) / (t1.x*t2.y - t1.y*t2.x));
 }
 
 // Requires #define GLM_FORCE_SWIZZLE

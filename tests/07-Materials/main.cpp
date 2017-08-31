@@ -20,7 +20,8 @@ int main()
 	solveTangents(vquad, 4, quadidx, 6);
 	Geometry quad = makeGeometry(vquad, 4, quadidx, 6);
 
-	Texture floor_normal = loadTexture("../../resources/textures/face.jpg");
+	Texture floor_normal = loadTexture("../../resources/textures/soulspear_normal.tga");
+	Texture floor_diffuse = loadTexture("../../resources/textures/soulspear_diffuse.tga");
 	Shader standard = loadShader("../../resources/shaders/standard.vert",
 								"../../resources/shaders/standard.frag");
 
@@ -37,8 +38,8 @@ int main()
 //
 	Framebuffer screen = { 0,800,800 };
 
-	glm::mat4 cam_view = glm::lookAt(glm::vec3(0, 3, -4), 
-						glm::vec3(0, 1, 0), 
+	glm::mat4 cam_view = glm::lookAt(glm::vec3(0, 4, -4), 
+						glm::vec3(0, 0, 0), 
 						glm::vec3(0, 1, 0));
 	glm::mat4 cam_proj = glm::perspective(45.f, 800.f / 600.f, .01f, 100.f);
 	glm::mat4 go_model;
@@ -47,13 +48,18 @@ int main()
 
 	while (context.step())
 	{
+		float time = context.getTime();
+
+		go_model = glm::rotate(time,glm::vec3(0,1,0)) *
+					glm::rotate(glm::radians(90.f), glm::vec3(1, 0, 0)) *
+					glm::scale(glm::vec3(5,5,1));
+
 		clearFramebuffer(screen);
 		setFlags(RenderFlag::DEPTH);
 
 		int loc = 0, tslot = 0;
-		float time = context.getTime();
 
-		setUniforms(standard, loc, tslot, cam_proj, cam_view, go_model, floor_normal, dl_dir);
+		setUniforms(standard, loc, tslot, cam_proj, cam_view, go_model, floor_normal, floor_diffuse, dl_dir);
 
 		s0_draw(screen, standard, quad);
 	}
