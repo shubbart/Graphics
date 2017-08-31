@@ -20,17 +20,23 @@ struct Shader
 Shader makeShader(const char *vert_source, const char *frag_source);
 void freeShader(Shader &s);
 
-struct Framebuffer
-{
-	unsigned handle, width, height;
-};
-
 struct Texture
 {
 	unsigned handle;
 };
 
-Texture makeTexture(unsigned w, unsigned h, unsigned c, const unsigned char *pixels);
+struct Framebuffer
+{
+	unsigned handle, width, height, nTargets;
+	Texture depthTarget;
+	Texture targets[8];
+};
+
+
+
+Texture makeTexture(unsigned w, unsigned h, unsigned c, const void *pixels, bool isFloat = false);
 void freeTexture(Texture &t);
 
 void solveTangents(Vertex *v, size_t vsize, const unsigned *idx, size_t isize);
+
+Framebuffer makeFramebuffer(unsigned w, unsigned h, unsigned c, bool hasDepth, unsigned nTargets, unsigned nFlatTargets);
