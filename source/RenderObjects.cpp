@@ -232,7 +232,7 @@ Framebuffer makeFramebuffer(unsigned w, unsigned h, unsigned c, bool hasDepth,
 			retval.targets[i].handle, 0);
 	}
 
-	glDrawBuffers(nTargets, attachments);
+	glDrawBuffers(retval.nTargets, attachments);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	return retval;
