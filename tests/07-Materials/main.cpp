@@ -78,7 +78,7 @@ int main()
 		clearFramebuffer(screen);
 		loc = 0, slot = 0;
 
-		setUniforms(fsq_shader, loc, slot, fBuffer.targets[0]);
+		setUniforms(fsq_shader, loc, slot, fBuffer.targets[1]);
 
 		s0_draw(screen, fsq_shader, quad);
 	}
