@@ -10,7 +10,7 @@
 int main()
 {
 	Context context;
-	context.init();
+	context.init(1280, 720);
 
 	Camera cam;
 	SpecGloss objects[8];
@@ -27,16 +27,18 @@ int main()
 	solveTangents(vquad, 4, quadidx, 6);
 	Geometry quad = makeGeometry(vquad, 4, quadidx, 6);
 
-	Shader standard = loadShader("../../resources/shaders/standard.vert",
-		"../../resources/shaders/standard.frag");
+	Shader gpass = loadShader("../../resources/shaders/gpass.vert",
+		"../../resources/shaders/gpass.frag");
 
-	Shader fsq_shader = loadShader("../../resources/shaders/quad.vert",
-		"../../resources/shaders/quad.frag");
+	Shader cpass = loadShader("../../resources/shaders/cpass.vert",
+		"../../resources/shaders/cpass.frag");
 
 	////////////////////////
 	/// Model Data
 
 	// Floor
+	objects[0].geo = quad;
+	objects[0].model = glm::rotate(glm::radians(90.f), glm::vec3(-1, 0, 0)) * glm::scale(glm::vec3(5, 5, 1));
 	objects[0].normal = loadTexture("../../resources/textures/four_normal.tga");
 	objects[0].diffuse = loadTexture("../../resources/textures/four_diffuse.tga");
 	objects[0].specular = loadTexture("../../resources/textures/sfour_specular.tga");
@@ -55,14 +57,15 @@ int main()
 	objects[2].diffuse = loadTexture("../../resources/textures/earth_diffuse.tga");
 	objects[2].specular = loadTexture("../../resources/textures/earth_specular.tga");
 	objects[2].gloss = 4.0f;
+	objects[2].model = glm::scale(glm::vec3(2, 2, 2)) * glm::translate(glm::vec3(2, 1, -1));
 	
 
 	//////////////////////////
 	// Camera Data
-	cam.view = glm::lookAt(glm::vec3(0, 2, 3),
-		glm::vec3(0, 2, 0),
+	cam.view = glm::lookAt(glm::vec3(0, 2, 5),
+		glm::vec3(0, 1, 0),
 		glm::vec3(0, 1, 0));
-	cam.proj = glm::perspective(45.f, 1280.f / 720.f, 1.f, 5.f);
+	cam.proj = glm::perspective(45.f, 1280.f / 720.f, 1.f, 10.f);
 
 	//////////////////////////
 	// Light
@@ -73,8 +76,8 @@ int main()
 	l.type = 0;
 
 
-	Framebuffer screen = { 0, 800, 600 };
-	Framebuffer fBuffer = makeFramebuffer(1280, 720, 4, true, 3, 1);
+	Framebuffer screen = { 0, 1280, 720 };
+	Framebuffer gBuffer = makeFramebuffer(1280, 720, 4, true, 2, 2);
 
 	while (context.step())
 	{
@@ -84,40 +87,29 @@ int main()
 
 		l.color = glm::vec4(.1, .1, .1, 1) * time;
 
-		clearFramebuffer(fBuffer);
+		// GPass
+		clearFramebuffer(gBuffer);
 		setFlags(RenderFlag::DEPTH);
 
 		int loc = 0, slot = 0;
-		setUniforms(standard, loc, slot,
-			cam.proj, cam.view,	// Camera data
-			objects[1].model, objects[1].diffuse, objects[1].specular,
-			objects[1].normal, objects[1].gloss, // Model data
-			l.direction, l.color, l.intensity, l.ambient, l.type		  // Light data
-		);
-		s0_draw(fBuffer, standard, objects[1].geo);
 
-		//for(int i = 0; i < 2; ++i)
-		//{
-		//	int loc = 0, slot = 0;
-		//	setUniforms(standard, loc, slot,
-		//		cam.proj, cam.view,	// Camera data
-		//		objects[i].model, objects[i].diffuse, objects[i].specular, 
-		//		objects[i].normal, objects[i].gloss, // Model data
-		//		l.direction, l.color, l.intensity, l.ambient, l.type		  // Light data
-		//															);
-		//	s0_draw(fBuffer, standard, objects[i].geo);
-		//}
-		//////////////////////////////////////////////
-		//////////////////////////////////////////////////////////////////////////////////////
+		for(int i = 0; i < 3; ++i)
+		{
+			loc = 0, slot = 0;
+			setUniforms(gpass, loc, slot,
+				cam,	// Camera data
+				objects[i] // Model data
+				//,l.direction, l.color, l.intensity, l.ambient, l.type		  // Light data
+																	);
+			s0_draw(gBuffer, gpass, objects[i].geo);
+		}
 
-		clearFramebuffer(screen);
+		// CPass
+
 		loc = 0, slot = 0;
-
-		setUniforms(fsq_shader, loc, slot, fBuffer.targets[1],
-			fBuffer.targets[2],
-			fBuffer.targets[3], time);
-
-		s0_draw(screen, fsq_shader, quad);
+		setUniforms(cpass, loc, slot,
+					gBuffer.targets[0]);
+		s0_draw(screen, cpass, quad);
 	}
 	context.term();
 	return 0;
