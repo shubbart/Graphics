@@ -29,6 +29,8 @@
     <None Include="gpass.vert" />
     <None Include="lambert.frag" />
     <None Include="lambert.vert" />
+    <None Include="lpassD.frag" />
+    <None Include="lpassD.vert" />
     <None Include="mvplite.frag" />
     <None Include="mvplite.vert" />
     <None Include="point.frag" />

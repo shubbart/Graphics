@@ -17,10 +17,10 @@ void _internal::t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Sp
 	t_setUniform(s, loc_io, tex_io, val.gloss);
 }
 
-void _internal::t_setUniform(const Shader &s, int &loc_io, int &tex_io, const DirectionalLight &val)
+void _internal::t_setUniform(const Shader & s, int & loc_io, int & tex_io, const DirectionalLight & val)
 {
-	t_setUniform(s, loc_io, tex_io, val.getProjection);
-	t_setUniform(s, loc_io, tex_io, val.getView);
-	t_setUniform(s, loc_io, tex_io, val.color);
-	t_setUniform(s, loc_io, tex_io, val.intensity);
+	t_setUniform(s, loc_io, tex_io, val.getProjection()); // 0
+	t_setUniform(s, loc_io, tex_io, val.getView()); // 1
+	t_setUniform(s, loc_io, tex_io, val.color);		// 2
+	t_setUniform(s, loc_io, tex_io, val.intensity); // 3
 }

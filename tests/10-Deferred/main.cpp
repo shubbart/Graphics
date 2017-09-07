@@ -53,12 +53,26 @@ void main()
 	cam.view = glm::lookAt(glm::vec3(0, 2, 5), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
 	cam.proj = glm::perspective(45.f, 1280.f / 720.f, 1.f, 10.f);
 
+	DirectionalLight dlights[2];
+	dlights[0].range = 10;
+	dlights[0].intensity = 1;
+	dlights[0].color = glm::vec4(1, 1, 0, 1);
+	dlights[0].direction = glm::vec3(1, 0, 0);
 
+	dlights[1].range = 10;
+	dlights[1].intensity = 1;
+	dlights[1].color = glm::vec4(0, 0, 1, 1);
+	dlights[1].direction = glm::vec3(-1, 0, 0);
+
+	// Shaders
 	Shader gpass = loadShader("../../resources/shaders/gpass.vert", "../../resources/shaders/gpass.frag");
 	Shader cpass = loadShader("../../resources/shaders/cpass.vert", "../../resources/shaders/cpass.frag");
+	Shader lpassD = loadShader("../../resources/shaders/lpassD.vert", "../../resources/shaders/lpassD.frag");
 
+	// Frambuffers
 	Framebuffer screen = { 0,1280,720 };
 	Framebuffer gbuffer = makeFramebuffer(1280, 720, 4, true, 2, 2);
+	Framebuffer lbuffer = makeFramebuffer(1280, 720, 4, false, 2, 0);
 
 	int loc = 0, slot = 0;
 	while (context.step())
@@ -77,14 +91,22 @@ void main()
 		}
 
 		// LPass
-
+		clearFramebuffer(lbuffer);
+		setFlags(RenderFlag::ADDITIVE);
+		for (int i = 0; i < 2; ++i)
+		{
+			loc = slot = 0;
+			setUniforms(lpassD, loc, slot, cam, dlights[i], gbuffer.targets[3]);
+			s0_draw(lbuffer, lpassD, quad);
+		}
 
 		////////////////////////////
 		// CPass
 		loc = slot = 0;
 		clearFramebuffer(screen);
-		setUniforms(cpass, loc, slot, gbuffer.targets[0], gbuffer.targets[1], 
-								gbuffer.targets[2], gbuffer.targets[3]);
+		setUniforms(cpass, loc, slot, lbuffer.targets[0]//, gbuffer.targets[1], 
+								//gbuffer.targets[2], gbuffer.targets[3]
+								);
 		s0_draw(screen, cpass, quad);
 	}
 	context.term();
