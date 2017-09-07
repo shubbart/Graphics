@@ -83,8 +83,29 @@ struct StandardLight
 	int type;
 };
 
+struct DirectionalLight
+{
+	glm::vec3 target; // For shadow mapping
+	float range; // For shadow mapping
+
+	glm::mat4 getProjection() const // 0
+	{
+		return glm::ortho<float>(-range, range, -range, range, -range, range);
+	}
+	glm::mat4 getView() const // 1
+	{
+		return glm::lookAt(-direction + target
+			, target, glm::vec3(0, 1, 0));
+	}
+
+	glm::vec3 direction; //2
+	glm::vec4 color; //3
+	float intensity;
+};
+
 namespace _internal
 {
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Camera &val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const SpecGloss &val);
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const DirectionalLight &val);
 }

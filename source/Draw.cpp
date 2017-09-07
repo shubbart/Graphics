@@ -90,4 +90,12 @@ void setFlags(int flags)
 		glEnable(GL_DEPTH_TEST);
 	else 
 		glDisable(GL_DEPTH_TEST);
+
+	if (flags & RenderFlag::ADDITIVE)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
+	}
+	else
+		glDisable(GL_DEPTH_TEST);
 }
