@@ -21,6 +21,9 @@ struct Transform
 
 struct Camera
 {
+	glm::mat4 proj;
+	glm::mat4 view;
+
 	Transform transform;
 
 	float fov = 45.f, aspect = 8.f / 6.f, near = 0.01f, far = 100.0f;
@@ -58,4 +61,24 @@ struct OrbitCam
 
 	// Check input and modify camera.transform accordingly
 	void update(float dt);
+};
+
+struct SpecGloss
+{
+	Geometry geo;
+
+	glm::mat4 model;
+	Texture diffuse;
+	Texture specular;
+	Texture normal;
+	float gloss;
+};
+
+struct StandardLight
+{
+	glm::vec3 direction;
+	glm::vec4 color;
+	float intensity;
+	glm::vec4 ambient;
+	int type;
 };

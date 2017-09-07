@@ -4,12 +4,17 @@
 #include "graphics\RenderObjects.h"
 #include "graphics\Vertex.h"
 #include "glm\ext.hpp"
+#include "graphics\GameObjects.h"
 
 
 int main()
 {
 	Context context;
 	context.init();
+
+	Camera cam;
+	SpecGloss sceneObjects[2];
+	StandardLight l;
 
 	Vertex vquad[] = {
 		{ { -1,-1,0,1 },{},{ 0,0 },{ 0,0,1,0 } },
@@ -30,28 +35,30 @@ int main()
 
 	////////////////////////
 	/// Model Data
-	Geometry  ss_geo = loadGeometry("../../resources/models/soulspear.obj");
-	glm::mat4 ss_model;
+	sceneObjects[0].geo = loadGeometry("../../resources/models/soulspear.obj");
+	
+	sceneObjects[0].normal = loadTexture("../../resources/textures/soulspear_normal.tga");
+	sceneObjects[0].diffuse = loadTexture("../../resources/textures/soulspear_diffuse.tga");
+	sceneObjects[0].specular = loadTexture("../../resources/textures/soulspear_specular.tga");
+	sceneObjects[0].gloss = 4.0f;
 
-	Texture   ss_normal = loadTexture("../../resources/textures/soulspear_normal.tga");
-	Texture   ss_diffuse = loadTexture("../../resources/textures/soulspear_diffuse.tga");
-	Texture   ss_specular = loadTexture("../../resources/textures/soulspear_specular.tga");
-	float     ss_gloss = 4.0f;
+	sceneObjects[1] = sceneObjects[0];
+	//sceneObjects[1].model = glm::rotate(glm::degrees(90.f), glm::vec3(0, 0, 1));
 
 	//////////////////////////
 	// Camera Data
-	glm::mat4 cam_view = glm::lookAt(glm::vec3(0, 2, 3),
+	cam.view = glm::lookAt(glm::vec3(0, 2, 3),
 		glm::vec3(0, 2, 0),
 		glm::vec3(0, 1, 0));
-	glm::mat4 cam_proj = glm::perspective(45.f, 1280.f / 720.f, 1.f, 5.f);
+	cam.proj = glm::perspective(45.f, 1280.f / 720.f, 1.f, 5.f);
 
 	//////////////////////////
 	// Light
-	glm::vec3 l_dir = glm::normalize(glm::vec3(.2, -1, -1));
-	glm::vec4 l_color = glm::vec4(.7, .5, .9, 1);
-	float     l_intensity = 5.0;
-	glm::vec4 l_ambient = glm::vec4(.2, .2, .01, 1);
-	int		  l_type = 0;
+	l.direction = glm::normalize(glm::vec3(.2, -1, -1));
+	l.color = glm::vec4(.7, .5, .9, 1);
+	l.intensity = 5.0;
+	l.ambient = glm::vec4(.2, .2, .01, 1);
+	l.type = 0;
 
 
 	Framebuffer screen = { 0, 800, 600 };
@@ -60,25 +67,43 @@ int main()
 	while (context.step())
 	{
 		float time = context.getTime();
-		ss_model = glm::rotate(time, glm::vec3(0, 1, 0));
+		//sceneObjects[0].model = glm::rotate(time, glm::vec3(0, 1, 0));
+		sceneObjects[1].model = glm::rotate(time*50, glm::vec3(0, -1, 0));
+
+		l.color = glm::vec4(.1, .1, .1, 1) * time;
 
 		clearFramebuffer(fBuffer);
 		setFlags(RenderFlag::DEPTH);
 
 		int loc = 0, slot = 0;
-
 		setUniforms(standard, loc, slot,
-			cam_proj, cam_view,	// Camera data
-			ss_model, ss_diffuse, ss_specular, ss_normal, ss_gloss, // Model data
-			l_dir, l_color, l_intensity, l_ambient, l_type		  // Light data
-																	);
-		s0_draw(fBuffer, standard, ss_geo);
+			cam.proj, cam.view,	// Camera data
+			sceneObjects[1].model, sceneObjects[1].diffuse, sceneObjects[1].specular,
+			sceneObjects[1].normal, sceneObjects[1].gloss, // Model data
+			l.direction, l.color, l.intensity, l.ambient, l.type		  // Light data
+		);
+		s0_draw(fBuffer, standard, sceneObjects[1].geo);
+
+		//for(int i = 0; i < 2; ++i)
+		//{
+		//	int loc = 0, slot = 0;
+		//	setUniforms(standard, loc, slot,
+		//		cam.proj, cam.view,	// Camera data
+		//		sceneObjects[i].model, sceneObjects[i].diffuse, sceneObjects[i].specular, 
+		//		sceneObjects[i].normal, sceneObjects[i].gloss, // Model data
+		//		l.direction, l.color, l.intensity, l.ambient, l.type		  // Light data
+		//															);
+		//	s0_draw(fBuffer, standard, sceneObjects[i].geo);
+		//}
+		//////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 
 		clearFramebuffer(screen);
 		loc = 0, slot = 0;
 
-		setUniforms(fsq_shader, loc, slot, fBuffer.targets[1]);
+		setUniforms(fsq_shader, loc, slot, fBuffer.targets[1],
+											fBuffer.targets[2],
+											fBuffer.targets[3], time);
 
 		s0_draw(screen, fsq_shader, quad);
 	}

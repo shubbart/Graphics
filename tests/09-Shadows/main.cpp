@@ -13,6 +13,7 @@ int main()
 
 	Framebuffer screen = { 0, 800, 600 };
 	Framebuffer fb_shadow = makeFramebuffer(1280, 720, 4, true, 3, 1);
+	Framebuffer fb_shadow2 = makeFramebuffer(1280, 720, 4, true, 3, 1);
 
 	Vertex vquad[] = {
 		// Position		Col	Tex		Normals
@@ -61,18 +62,20 @@ int main()
 	glm::vec3 l_dir = glm::normalize(glm::vec3(.8, -1.f, -1.f));
 	glm::mat4 l_proj = glm::ortho<float>(-10,10,-10,10,-10,10);
 	glm::mat4 l_view = glm::lookAt(-l_dir, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-	glm::vec4 l_color = glm::vec4(.7, .5, .9, 1);
-	float     l_intensity = 3.0;
-	glm::vec4 l_ambient = glm::vec4(.2, .2, .01, 1);
-	int		  l_type = 0;
+	
+	//glm::vec4 l_color = glm::vec4(.7, .5, .9, 1);
+	//float     l_intensity = 3.0;
+	//glm::vec4 l_ambient = glm::vec4(.2, .2, .01, 1);
+	//int		  l_type = 0;
 
-	glm::vec3 l2_dir = glm::normalize(glm::vec3(-.8, -1.f, 1.f));
-	glm::mat4 l2_proj = glm::ortho<float>(10, 10, -10, 10, -10, 10);
+	glm::vec3 l2_dir = glm::normalize(glm::vec3(-.8, -1.f, -1.f));
+	glm::mat4 l2_proj = glm::ortho<float>(-10, 10, -10, 10, -10, 10);
 	glm::mat4 l2_view = glm::lookAt(-l2_dir, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-	glm::vec4 l2_color = glm::vec4(0, 1, 0, 1);
-	float     l2_intensity = 3.0;
-	glm::vec4 l2_ambient = glm::vec4(.2, .2, .01, 1);
-	int		  l2_type = 0;
+	
+	//glm::vec4 l2_color = glm::vec4(0, 1, 0, 1);
+	//float     l2_intensity = 3.0;
+	//glm::vec4 l2_ambient = glm::vec4(.2, .2, .01, 1);
+	//int		  l2_type = 0;
 
 	while (context.step())
 	{
@@ -100,69 +103,58 @@ int main()
 			l_proj, l_view, cube_model);
 		s0_draw(fb_shadow, shdr_shadow, cube_geo);
 
+
+
+		//////////// Second Light
+
+		// Shadow Pass
+		setFlags(RenderFlag::DEPTH);
+		clearFramebuffer(fb_shadow2, false, true);
+
+		loc = 0, slot = 0;
+
+		setUniforms(shdr_shadow, loc, slot,
+			l2_proj, l2_view, floor_model);
+		s0_draw(fb_shadow2, shdr_shadow, floor_geo);
+
+		loc = slot = 0;
+		setUniforms(shdr_shadow, loc, slot,
+			l2_proj, l2_view, ss_model);
+		s0_draw(fb_shadow2, shdr_shadow, ss_geo);
+
+		loc = slot = 0;
+		setUniforms(shdr_shadow, loc, slot,
+			l2_proj, l2_view, cube_model);
+		s0_draw(fb_shadow2, shdr_shadow, cube_geo);
+
 		// Light Pass
 		setFlags(RenderFlag::DEPTH);
 		clearFramebuffer(screen);
 
 		loc = slot = 0;
-		setUniforms(shdr_direct, loc, slot, cam_proj, cam_view, 
-			floor_model, l_proj, l_view, 
-			fb_shadow.depthTarget);
+		setUniforms(shdr_direct, loc, slot,
+			cam_proj, cam_view,
+			floor_model, l_proj, l_view,
+			fb_shadow.depthTarget,
+			 l2_proj, l2_view,
+			fb_shadow2.depthTarget);
 		s0_draw(screen, shdr_direct, floor_geo);
 
 		loc = slot = 0;
-		setUniforms(shdr_direct, loc, slot, cam_proj, cam_view, 
-			ss_model, l_proj, l_view, fb_shadow.depthTarget);
+		setUniforms(shdr_direct, loc, slot,
+			cam_proj, cam_view,
+			ss_model, l_proj, l_view, fb_shadow.depthTarget,
+			l2_proj, l2_view,
+			fb_shadow2.depthTarget);
 		s0_draw(screen, shdr_direct, ss_geo);
 
 		loc = slot = 0;
-		setUniforms(shdr_direct, loc, slot, cam_proj, cam_view, 
-			cube_model, l_proj, l_view, fb_shadow.depthTarget);
+		setUniforms(shdr_direct, loc, slot, 
+			cam_proj, cam_view,
+			cube_model, l_proj, l_view, fb_shadow.depthTarget,
+			l2_proj, l2_view,
+			fb_shadow2.depthTarget);
 		s0_draw(screen, shdr_direct, cube_geo);
-
-		////////////// Second Light
-
-		//// Shadow Pass
-		//setFlags(RenderFlag::DEPTH);
-		//clearFramebuffer(fb_shadow, false, true);
-
-		//loc = 0, slot = 0;
-
-		//setUniforms(shdr_shadow, loc, slot,
-		//	l2_proj, l2_view, floor_model);
-		//s0_draw(fb_shadow, shdr_shadow, floor_geo);
-
-		//loc = slot = 0;
-		//setUniforms(shdr_shadow, loc, slot,
-		//	l2_proj, l2_view, ss_model);
-		//s0_draw(fb_shadow, shdr_shadow, ss_geo);
-
-		//loc = slot = 0;
-		//setUniforms(shdr_shadow, loc, slot,
-		//	l2_proj, l2_view, cube_model);
-		//s0_draw(fb_shadow, shdr_shadow, cube_geo);
-
-		//// Light Pass
-		//setFlags(RenderFlag::DEPTH);
-		//clearFramebuffer(screen);
-
-		//loc = slot = 0;
-		//setUniforms(shdr_direct, loc, slot, cam_proj, cam_view,
-		//	floor_model, l2_proj, l2_view, l2_color,
-		//	fb_shadow.depthTarget);
-		//s0_draw(screen, shdr_direct, floor_geo);
-
-		//loc = slot = 0;
-		//setUniforms(shdr_direct, loc, slot, cam_proj, cam_view,
-		//	ss_model, l2_proj, l2_view, l2_color,
-		//	fb_shadow.depthTarget);
-		//s0_draw(screen, shdr_direct, ss_geo);
-
-		//loc = slot = 0;
-		//setUniforms(shdr_direct, loc, slot, cam_proj, cam_view,
-		//	cube_model, l2_proj, l2_view, l2_color,
-		//	fb_shadow.depthTarget);
-		//s0_draw(screen, shdr_direct, cube_geo);
 
 	}
 	context.term();
