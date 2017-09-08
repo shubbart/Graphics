@@ -43,7 +43,7 @@ Geometry makeGeometry(const Vertex *verts, size_t vsize,
 
 	// Describe memory layout
 	glEnableVertexAttribArray(0); // Position attribute
-	glVertexAttribPointer(0,4,GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 	glEnableVertexAttribArray(1); // Color attribute
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)16);
 	glEnableVertexAttribArray(2); // texCoord
@@ -119,7 +119,7 @@ Shader makeShader(const char *vert_source, const char *frag_source)
 	}
 
 
-	
+
 #endif _DEBUG
 
 	glAttachShader(retval.handle, vs);
@@ -173,7 +173,7 @@ Texture makeTexture(unsigned w, unsigned h, unsigned c, const void *pixels, bool
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0,((isFloat || c==0) ? i:f), w, h, 0, f, (isFloat?GL_FLOAT : GL_UNSIGNED_BYTE), pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels);
 
 
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -191,7 +191,7 @@ void solveTangents(Vertex *v, size_t vsize, const unsigned *idxs, size_t isize)
 {
 	for (int i = 0; i < isize; i += 3)
 	{
-		glm::vec4 T = calcTangent(v[idxs[i]], v[idxs[i +1]], v[idxs[i]+2]);
+		glm::vec4 T = calcTangent(v[idxs[i]], v[idxs[i + 1]], v[idxs[i] + 2]);
 
 		for (int j = 0; j < 3; ++j)
 		{
@@ -201,7 +201,7 @@ void solveTangents(Vertex *v, size_t vsize, const unsigned *idxs, size_t isize)
 	}
 
 	for (int i = 0; i < vsize; ++i)
-		v[i].bitangent = glm::vec4(glm::cross(v[i].normal.xyz(), v[i].tangent.xyz()),0);
+		v[i].bitangent = glm::vec4(glm::cross(v[i].normal.xyz(), v[i].tangent.xyz()), 0);
 
 }
 

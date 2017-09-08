@@ -3,7 +3,7 @@
 
 struct Vertex;
 
-struct Geometry 
+struct Geometry
 {
 	// Vertex array object, Vertex Buffer Object, Index Buffer Object
 	unsigned handle, vbo, ibo, size;

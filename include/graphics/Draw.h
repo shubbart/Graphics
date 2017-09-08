@@ -44,8 +44,8 @@ void setUniforms(const Shader &s, int &loc_io, int &tex_io, const T &val)
 	_internal::t_setUniform(s, loc_io, tex_io, val);
 }
 
-enum RenderFlag 
-{ 
+enum RenderFlag
+{
 	NONE = 0,
 	DEPTH = 1,
 	ADDITIVE = 2

@@ -2,9 +2,10 @@
 out vec4 outColor;
 in vec2 vUV;
 
-layout(location = 0) uniform sampler2D map;
+layout(location = 0) uniform sampler2D gDiffuse;
+layout(location = 1) uniform sampler2D lDiffuse;
 
 void main ()
 {
-	outColor = texture(map, vUV.xy);
+	outColor = texture(gDiffuse, vUV.xy) * texture(lDiffuse, vUV.xy);
 }
