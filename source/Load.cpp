@@ -30,6 +30,26 @@ Texture loadTexture(const char *path)
 	return retval;
 }
 
+CubeTexture loadCubeTexture(const char *path_Xpos, const char *path_Xneg,
+	const char *path_Ypos, const char *path_Yneg,
+	const char *path_Zpos, const char *path_Zneg)
+{
+	CubeTexture retval = { 0 };
+
+	int w, h, c;
+	unsigned char *pixels;
+
+	stbi_set_flip_vertically_on_load(true);
+
+	pixels = stbi_load(path, &w, &h, &c, STBI_default);
+
+	retval = makeTexture(w, h, c, pixels);
+
+	stbi_image_free(pixels);
+
+	return retval;
+}
+
 std::string fileToString(const char *path)
 {
 	std::ifstream t(path);

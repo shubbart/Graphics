@@ -9,7 +9,9 @@
 void main()
 {
 	Context context;
-	context.init(1280, 720);
+	float width = 1280.f;
+	float height = 720.f;
+	context.init(width, height);
 
 	Vertex vquad[] = { { { -1,-1,0,1 },{},{ 0,0 },{ 0,0,1,0 } },{ { 1,-1,0,1 },{},{ 1,0 },{ 0,0,1,0 } },{ { 1, 1,0,1 },{},{ 1,1 },{ 0,0,1,0 } },{ { -1, 1,0,1 },{},{ 0,1 },{ 0,0,1,0 } } };
 	unsigned quadidx[] = { 0,1,3, 1,2,3 };
@@ -49,33 +51,36 @@ void main()
 	// Camera
 	Camera cam;
 	cam.view = glm::lookAt(glm::vec3(0, 2, 5), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
-	cam.proj = glm::perspective(45.f, 1280.f / 720.f, 1.f, 10.f);
+	cam.proj = glm::perspective(45.f, width / height, 1.f, 10.f);
 
 	DirectionalLight dlights[2];
 
 	dlights[0].range = 10;
 	dlights[0].intensity = 1;
 	dlights[0].color = glm::vec4(1, 1, 0, 1);
-	dlights[0].direction = glm::normalize(glm::vec3(1, 0, 0));
+	dlights[0].direction = glm::normalize(glm::vec3(.8, -.8, -.4));
 
-	dlights[1].range = 10;
-	dlights[1].intensity = 1;
-	dlights[1].color = glm::vec4(0, 0, 1, 1);
-	dlights[1].direction = glm::normalize(glm::vec3(-1, 1, 0));
+	//dlights[1].range = 10;
+	//dlights[1].intensity = 1;
+	//dlights[1].color = glm::vec4(0, 0, 1, 1);
+	//dlights[1].direction = glm::normalize(glm::vec3(-1, 1, 0));
 
 	Shader gpass = loadShader("../../resources/shaders/gpass.vert", "../../resources/shaders/gpass.frag");
 	Shader cpass = loadShader("../../resources/shaders/cpass.vert", "../../resources/shaders/cpass.frag");
 	Shader lpassD = loadShader("../../resources/shaders/lpassD.vert", "../../resources/shaders/lpassD.frag");
 	Shader spassD = loadShader("../../resources/shaders/shadow.vert", "../../resources/shaders/shadow.frag");
 
-	Framebuffer screen = { 0,1280,720 };
-	Framebuffer gbuffer = makeFramebuffer(1280, 720, 4, true, 2, 2);
-	Framebuffer lbuffer = makeFramebuffer(1280, 720, 4, false, 2, 0);
+	Framebuffer screen = { 0,width, height };
+	Framebuffer gbuffer = makeFramebuffer(width, height, 4, true, 2, 2);
+	Framebuffer lbuffer = makeFramebuffer(width, height, 4, false, 2, 0);
 	Framebuffer sbuffer = makeFramebuffer(1024, 1024, 0, true, 0, 0);
 
 	int loc = 0, slot = 0;
 	while (context.step())
 	{
+		float time = context.getTime();
+		objects[1].model = glm::rotate(time, glm::vec3(0, 1, 0));
+
 		// GPass
 		clearFramebuffer(gbuffer);
 		setFlags(RenderFlag::DEPTH);
@@ -88,7 +93,7 @@ void main()
 
 		// LPass
 		clearFramebuffer(lbuffer);
-		for (int i = 0; i < 2; ++i)
+		for (int i = 0; i < 1; ++i)
 		{
 			/// SPass Pre-Pass
 			clearFramebuffer(sbuffer);
@@ -109,6 +114,7 @@ void main()
 		// CPass
 		loc = slot = 0;
 		clearFramebuffer(screen);
+		setFlags(RenderFlag::NONE);
 		setUniforms(cpass, loc, slot, gbuffer.targets[0],
 									lbuffer.targets[0]);
 		s0_draw(screen, cpass, quad);
