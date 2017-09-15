@@ -226,7 +226,7 @@ CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c,
 	glGenTextures(1, &retval.handle);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, retval.handle);
 
-	// Right, Left
+	// Back, Front
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f,
 		(isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[0]);
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f,
@@ -235,10 +235,10 @@ CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c,
 	// Top, Bottom
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f,
 		(isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[2]);
-	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGB, w, h,
-		0, GL_RGB, GL_UNSIGNED_BYTE, pixels[3]);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f,
+		(isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[3]);
 
-	// Back, Front
+	// Right, Left
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f,
 		(isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[4]);
 	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f,

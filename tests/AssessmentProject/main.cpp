@@ -13,6 +13,17 @@ void main()
 	float height = 720.f;
 	context.init(width, height);
 
+	// Skybox
+	Geometry skyCube = loadGeometry("../../resources/models/cube.obj");
+	glm::mat4 model;
+
+	CubeTexture skybox = loadCubeMap("../../resources/textures/toh_ft.tga",
+									"../../resources/textures/toh_bk.tga",
+									"../../resources/textures/toh_up.tga",
+									"../../resources/textures/toh_dn.tga",
+									"../../resources/textures/toh_rt.tga",
+									"../../resources/textures/toh_lf.tga");
+
 	Vertex vquad[] = { { { -1,-1,0,1 },{},{ 0,0 },{ 0,0,1,0 } },{ { 1,-1,0,1 },{},{ 1,0 },{ 0,0,1,0 } },{ { 1, 1,0,1 },{},{ 1,1 },{ 0,0,1,0 } },{ { -1, 1,0,1 },{},{ 0,1 },{ 0,0,1,0 } } };
 	unsigned quadidx[] = { 0,1,3, 1,2,3 };
 	solveTangents(vquad, 4, quadidx, 6);
@@ -50,16 +61,8 @@ void main()
 
 	// Camera
 	Camera cam;
-	cam.view = glm::lookAt(glm::vec3(0, 2, 5), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
-	cam.proj = glm::perspective(45.f, width / height, 1.f, 10.f);
-
-	// Skybox
-	CubeTexture skybox = loadCubeMap("../../resources/textures/toh_rt.tga",
-		"../../resources/textures/toh_lf.tga",
-		"../../resources/textures/toh_up.tga",
-		"../../resources/textures/toh_dn.tga",
-		"../../resources/textures/toh_bk.tga",
-		"../../resources/textures/toh_ft.tga");
+	//cam.view = glm::lookAt(glm::vec3(0, 2, 5), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
+	cam.proj = glm::perspective(45.f, width / height, 1.f, 30.f);
 
 	DirectionalLight dlights[2];
 
@@ -77,55 +80,65 @@ void main()
 	Shader cpass = loadShader("../../resources/shaders/cpass.vert", "../../resources/shaders/cpass.frag");
 	Shader lpassD = loadShader("../../resources/shaders/lpassD.vert", "../../resources/shaders/lpassD.frag");
 	Shader spassD = loadShader("../../resources/shaders/shadow.vert", "../../resources/shaders/shadow.frag");
+	Shader sbpass = loadShader("../../resources/shaders/cubeMap.vert", "../../resources/shaders/cubeMap.frag");
 
 	Framebuffer screen = { 0,width, height };
 	Framebuffer gbuffer = makeFramebuffer(width, height, 4, true, 2, 2);
 	Framebuffer lbuffer = makeFramebuffer(width, height, 4, false, 2, 0);
 	Framebuffer sbuffer = makeFramebuffer(1024, 1024, 0, true, 0, 0);
+	Framebuffer sbbuffer = makeFramebuffer(width, height, 4, true, 6, 6);
 
 	int loc = 0, slot = 0;
 	while (context.step())
 	{
 		float time = context.getTime();
-		objects[1].model = glm::rotate(time, glm::vec3(0, 1, 0));
-
-		// GPass
-		clearFramebuffer(gbuffer);
-		setFlags(RenderFlag::DEPTH);
-		for (int i = 0; i < 3; ++i)
-		{
-			loc = slot = 0;
-			setUniforms(gpass, loc, slot, cam, objects[i]);
-			s0_draw(gbuffer, gpass, objects[i].geo);
-		}
-
-		// LPass
-		clearFramebuffer(lbuffer);
-		for (int i = 0; i < 1; ++i)
-		{
-			/// SPass Pre-Pass
-			clearFramebuffer(sbuffer);
-			setFlags(RenderFlag::DEPTH);
-			for (int j = 0; j < 3; ++j)
-			{
-				loc = slot = 0;
-				setUniforms(spassD, loc, slot, dlights[i].getProjection(), dlights[i].getView(), objects[j].model);
-				s0_draw(sbuffer, spassD, objects[j].geo);
-			}
-
-			setFlags(RenderFlag::ADDITIVE);
-			loc = slot = 0;
-			setUniforms(lpassD, loc, slot, cam, dlights[i], gbuffer.targets[3], gbuffer.targets[2], sbuffer.depthTarget);
-			s0_draw(lbuffer, lpassD, quad);
-		}
-
-		// CPass
-		loc = slot = 0;
+		// Skybox
 		clearFramebuffer(screen);
-		setFlags(RenderFlag::NONE);
-		setUniforms(cpass, loc, slot, gbuffer.targets[0],
-			lbuffer.targets[0]);
-		s0_draw(screen, cpass, quad);
+		setFlags(RenderFlag::DEPTH);
+		model = glm::rotate(time * .5f, glm::vec3(0,1,0)) * glm::scale(glm::vec3(30, 30, 30));
+		loc = 0, slot = 0;
+		setUniforms(sbpass, loc, slot, cam, model, skybox);
+		s0_draw(screen, sbpass, skyCube);
+	
+		//objects[1].model = glm::rotate(time, glm::vec3(0, 1, 0));
+
+		//// GPass
+		//clearFramebuffer(gbuffer);
+		//setFlags(RenderFlag::DEPTH);
+		//for (int i = 0; i < 3; ++i)
+		//{
+		//	loc = slot = 0;
+		//	setUniforms(gpass, loc, slot, cam, objects[i]);
+		//	s0_draw(gbuffer, gpass, objects[i].geo);
+		//}
+
+		//// LPass
+		//clearFramebuffer(lbuffer);
+		//for (int i = 0; i < 1; ++i)
+		//{
+		//	/// SPass Pre-Pass
+		//	clearFramebuffer(sbuffer);
+		//	setFlags(RenderFlag::DEPTH);
+		//	for (int j = 0; j < 3; ++j)
+		//	{
+		//		loc = slot = 0;
+		//		setUniforms(spassD, loc, slot, dlights[i].getProjection(), dlights[i].getView(), objects[j].model);
+		//		s0_draw(sbuffer, spassD, objects[j].geo);
+		//	}
+
+		//	setFlags(RenderFlag::ADDITIVE);
+		//	loc = slot = 0;
+		//	setUniforms(lpassD, loc, slot, cam, dlights[i], gbuffer.targets[3], gbuffer.targets[2], sbuffer.depthTarget);
+		//	s0_draw(lbuffer, lpassD, quad);
+		//}
+
+		//// CPass
+		//loc = slot = 0;
+		//clearFramebuffer(screen);
+		//setFlags(RenderFlag::NONE);
+		//setUniforms(cpass, loc, slot, gbuffer.targets[0],
+		//	lbuffer.targets[0]);
+		//s0_draw(screen, cpass, quad);
 	}
 	context.term();
 }
