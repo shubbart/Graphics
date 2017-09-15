@@ -103,6 +103,13 @@ struct DirectionalLight
 	float intensity;
 };
 
+struct ParticleVertex
+{
+	glm::vec4 position;
+	glm::vec3 velocity;
+	glm::vec4 color;
+};
+
 namespace _internal
 {
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Camera &val);

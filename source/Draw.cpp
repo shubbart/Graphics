@@ -22,6 +22,9 @@ void s0_draw(const Framebuffer &f, const Shader &s, const Geometry &g)
 	glBindVertexArray(0);
 }
 
+void tf0_update(const Shader &s, const ParticleBuffer &pb, int active);
+void tf0_draw(const Framebuffer &s, const Shader &s, const ParticleBuffer &pb);
+
 void setUniform(const Shader &shader, int location, float value)
 {
 	glProgramUniform1f(shader.handle, location, value);

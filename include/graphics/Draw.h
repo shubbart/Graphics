@@ -7,8 +7,11 @@ struct Geometry;
 struct Shader;
 struct Framebuffer;
 struct Texture;
+struct Particlebuffer;
 
 void s0_draw(const Framebuffer &f, const Shader &s, const Geometry &g);
+void tf0_update(const Shader &s, const ParticleBuffer &pb, int active);
+void tf0_draw(const Framebuffer &f, const Shader &s, const ParticleBuffer &pb);
 
 void clearFramebuffer(const Framebuffer &f, bool color = true, bool depth = true);
 

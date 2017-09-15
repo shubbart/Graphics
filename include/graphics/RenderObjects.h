@@ -18,6 +18,8 @@ struct Shader
 };
 
 Shader makeShader(const char *vert_source, const char *frag_source);
+Shader loadUpdateShader(const char *vert_path);
+Shader makeUpdateShader(const char *vert_src);
 void freeShader(Shader &s);
 
 struct Texture
@@ -50,3 +52,7 @@ CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c,
 	const void **pixels, bool isFloat = false);
 
 void freeCubeTexture(CubeTexture &t);
+
+struct ParticleBuffer { unsigned handle[2], vbo[2], size; };
+
+ParticleBuffer makeParticleBuffer(const ParticleBuffer *parts, size_t psize);
