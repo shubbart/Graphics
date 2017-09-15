@@ -53,6 +53,14 @@ void main()
 	cam.view = glm::lookAt(glm::vec3(0, 2, 5), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
 	cam.proj = glm::perspective(45.f, width / height, 1.f, 10.f);
 
+	// Skybox
+	CubeTexture skybox = loadCubeMap("../../resources/textures/toh_rt.tga",
+		"../../resources/textures/toh_lf.tga",
+		"../../resources/textures/toh_up.tga",
+		"../../resources/textures/toh_dn.tga",
+		"../../resources/textures/toh_bk.tga",
+		"../../resources/textures/toh_ft.tga");
+
 	DirectionalLight dlights[2];
 
 	dlights[0].range = 10;
@@ -116,7 +124,7 @@ void main()
 		clearFramebuffer(screen);
 		setFlags(RenderFlag::NONE);
 		setUniforms(cpass, loc, slot, gbuffer.targets[0],
-									lbuffer.targets[0]);
+			lbuffer.targets[0]);
 		s0_draw(screen, cpass, quad);
 	}
 	context.term();
