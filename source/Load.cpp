@@ -30,22 +30,27 @@ Texture loadTexture(const char *path)
 	return retval;
 }
 
-CubeTexture loadCubeTexture(const char *path_Xpos, const char *path_Xneg,
+CubeTexture loadCubeMap(const char *path_Xpos, const char *path_Xneg,
 	const char *path_Ypos, const char *path_Yneg,
 	const char *path_Zpos, const char *path_Zneg)
 {
 	CubeTexture retval = { 0 };
 
 	int w, h, c;
-	unsigned char *pixels;
+	const void **pixels = new const void *;
 
-	stbi_set_flip_vertically_on_load(true);
+	//stbi_set_flip_vertically_on_load(true);
 
-	pixels = stbi_load(path, &w, &h, &c, STBI_default);
+	pixels[0] = stbi_load(path_Xpos, &w, &h, &c, STBI_default);
+	pixels[1] = stbi_load(path_Xneg, &w, &h, &c, STBI_default);
+	pixels[2] = stbi_load(path_Ypos, &w, &h, &c, STBI_default);
+	pixels[3] = stbi_load(path_Yneg, &w, &h, &c, STBI_default);
+	pixels[4] = stbi_load(path_Zpos, &w, &h, &c, STBI_default);
+	pixels[5] = stbi_load(path_Zneg, &w, &h, &c, STBI_default);
 
-	retval = makeTexture(w, h, c, pixels);
+	retval = makeCubeMap(w, h, c, pixels);
 
-	stbi_image_free(pixels);
+	//stbi_image_free(pixels);
 
 	return retval;
 }

@@ -30,6 +30,7 @@ Geometry makeGeometry(const Vertex *verts, size_t vsize,
 	// Declare openGL objects and acquire handles
 	glGenBuffers(1, &retval.vbo);
 	glGenBuffers(1, &retval.ibo);
+	glGenVertexArrays(1, &retval.handle);
 
 	// Scope the variables
 	glBindVertexArray(retval.handle);
@@ -204,6 +205,61 @@ void solveTangents(Vertex *v, size_t vsize, const unsigned *idxs, size_t isize)
 
 }
 
+
+
+
+CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c,
+	const void **pixels, bool isFloat)
+{
+	CubeTexture retval = { 0 };
+
+	GLenum f = 0, i = 0; // External and internal format for color storage
+	switch (c)
+	{
+		case 0: f = GL_DEPTH_COMPONENT; i = GL_DEPTH24_STENCIL8; break;
+		case 1: f = GL_RED; i = GL_R32F; break;
+		case 2: f = GL_RG; i = GL_RG32F;  break;
+		case 3: f = GL_RGB; i = GL_RGB32F;  break;
+		case 4: f = GL_RGBA; i = GL_RGBA32F; break;
+	}
+
+	glGenTextures(1, &retval.handle);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, retval.handle);
+
+	// Right, Left
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f,
+		(isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[0]);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f,
+		(isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[1]);
+
+	// Top, Bottom
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f,
+		(isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[2]);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGB, w, h,
+		0, GL_RGB, GL_UNSIGNED_BYTE, pixels[3]);
+
+	// Back, Front
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f,
+		(isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[4]);
+	glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f,
+		(isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels[5]);
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	return retval;
+}
+
+void freeCubeTexture(CubeTexture &t)
+{
+	glDeleteTextures(1, &t.handle);
+	t = { 0 };
+}
+
 Framebuffer makeFramebuffer(unsigned w, unsigned h, unsigned c, bool hasDepth,
 	unsigned nTargets, unsigned nFloatTargets)
 {
@@ -238,47 +294,3 @@ Framebuffer makeFramebuffer(unsigned w, unsigned h, unsigned c, bool hasDepth,
 }
 
 void freeFramebuffer(Framebuffer &fb);
-
-CubeTexture makeCubeTexture(unsigned w, unsigned h, unsigned c,
-	const void **pixels, bool isFloat = false)
-{
-	CubeTexture retval = { 0 };
-
-	unsigned char *data;
-
-	GLenum f = 0, i = 0; // External and internal format for color storage
-	switch (c)
-	{
-	case 0: f = GL_DEPTH_COMPONENT; i = GL_DEPTH24_STENCIL8; break;
-	case 1: f = GL_RED; i = GL_R32F; break;
-	case 2: f = GL_RG; i = GL_RG32F;  break;
-	case 3: f = GL_RGB; i = GL_RGB32F;  break;
-	case 4: f = GL_RGBA; i = GL_RGBA32F; break;
-	}
-
-	glGenTextures(1, &retval.handle);
-	glBindTexture(GL_TEXTURE_2D, retval.handle);
-
-	for (GLuint i = 0; i < textures_faces.size(); i++)
-	{
-		data = stbi_load(textures_faces[i].c_str(), &w, &h, &c, 0);
-		glTexImage2D(
-			GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-			0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data
-		);
-	}
-
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f, (isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels);
-
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-	return retval;
-}
-
-void freeCubeTexture(CubeTexture &t);

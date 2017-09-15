@@ -21,6 +21,7 @@ namespace _internal
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, float val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, int val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Texture  &val);
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const CubeTexture &val);
 
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const glm::vec3 &val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const glm::vec4 &val);
@@ -28,6 +29,7 @@ namespace _internal
 
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Camera &val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Mesh &val);
+
 }
 
 template<typename T, typename ...U>

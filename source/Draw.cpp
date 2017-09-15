@@ -65,6 +65,13 @@ namespace _internal
 		glProgramUniform1i(s.handle, loc_io++, tex_io++);
 	}
 
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const CubeTexture &val)
+	{
+		glActiveTexture(GL_TEXTURE0 + tex_io);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, val.handle);
+		glProgramUniform1i(s.handle, loc_io++, tex_io++);
+	}
+
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const glm::vec3 &val)
 	{
 		glProgramUniform3fv(s.handle, loc_io++, 1, glm::value_ptr(val));
@@ -81,7 +88,6 @@ namespace _internal
 	}
 
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Camera &val);
-
 }
 
 void setFlags(int flags)

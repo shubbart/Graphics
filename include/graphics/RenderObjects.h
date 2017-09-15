@@ -46,11 +46,7 @@ struct CubeTexture
 	unsigned handle;
 };
 
-CubeTexture loadCubeTexture(const char *path_Xpos, const char *path_Xneg,
-	const char *path_Ypos, const char *path_Yneg,
-	const char *path_Zpos, const char *path_Zneg);
-
-CubeTexture makeCubeTexture(unsigned w, unsigned h, unsigned c,
+CubeTexture makeCubeMap(unsigned w, unsigned h, unsigned c,
 	const void **pixels, bool isFloat = false);
 
 void freeCubeTexture(CubeTexture &t);
