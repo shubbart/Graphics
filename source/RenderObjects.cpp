@@ -298,9 +298,4 @@ Framebuffer makeFramebuffer(unsigned w, unsigned h, unsigned c, bool hasDepth,
 
 void freeFramebuffer(Framebuffer &fb);
 
-ParticleBuffer makeParticleBuffer(const ParticleBuffer *parts, size_t psize)
-{
-	ParticleBuffer retval;
-
-	return retval;
-};
+ParticleBuffer makeParticleBuffer(const ParticleBuffer *parts, size_t psize);

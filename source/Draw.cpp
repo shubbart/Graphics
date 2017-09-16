@@ -23,7 +23,7 @@ void s0_draw(const Framebuffer &f, const Shader &s, const Geometry &g)
 }
 
 void tf0_update(const Shader &s, const ParticleBuffer &pb, int active);
-void tf0_draw(const Framebuffer &s, const Shader &s, const ParticleBuffer &pb);
+void tf0_draw(const Framebuffer &f, const Shader &s, const ParticleBuffer &pb);
 
 void setUniform(const Shader &shader, int location, float value)
 {
