@@ -39,8 +39,6 @@ CubeTexture loadCubeMap(const char *path_Xpos, const char *path_Xneg,
 	int w, h, c;
 	const void **pixels = new const void *;
 
-	//stbi_set_flip_vertically_on_load(true);
-
 	pixels[0] = stbi_load(path_Xpos, &w, &h, &c, STBI_default);
 	pixels[1] = stbi_load(path_Xneg, &w, &h, &c, STBI_default);
 	pixels[2] = stbi_load(path_Ypos, &w, &h, &c, STBI_default);
@@ -49,8 +47,6 @@ CubeTexture loadCubeMap(const char *path_Xpos, const char *path_Xneg,
 	pixels[5] = stbi_load(path_Zneg, &w, &h, &c, STBI_default);
 
 	retval = makeCubeMap(w, h, c, pixels);
-
-	//stbi_image_free(pixels);
 
 	return retval;
 }
